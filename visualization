@@ -49,7 +49,10 @@ var svg = d3.select("#body").append("svg:svg")
   .append("svg:g")
     .attr("transform", "translate(" + w / 2 + "," + h / 2 + ")");
 
-d3.json("https://raw.githubusercontent.com/derektopper/treehacks/master/test.json", function(imports) {
+	
+var oldurl = 	"http://mbostock.github.io/d3/talk/20111018/flare-imports.json";
+var newurl = "https://raw.githubusercontent.com/derektopper/treehacks/master/test.json";
+d3.json(newurl, function(imports) {
   var indexByName = {},
       nameByIndex = {},
       matrix = [],
@@ -72,18 +75,35 @@ d3.json("https://raw.githubusercontent.com/derektopper/treehacks/master/test.jso
       names.push(d);
     }
   });
+  
 
   // Construct a square matrix counting package imports.
   imports.forEach(function(d) {
-    var source = indexByName[name(d.name)],
+    var source = indexByName[name(d.name)];
         row = matrix[source];
     if (!row) {
      row = matrix[source] = [];
      for (var i = -1; ++i < n;) row[i] = 0;
     }
-    d.imports.forEach(function(d) { row[indexByName[name(d)]]++; });
+	
+	row[indexByName[name(d)]] = d.size;
+	
+   d.imports.forEach(
+	   function(e)
+	   {
+	    var idx = indexByName[name(e)];
+		 //row[idx]++; 
+		 row[idx] = d.size;
+	   }
+   );
   });
 
+  
+//  console.log(imports);
+//  console.log(nameByIndex);
+//  console.log(indexByName);
+  console.log(matrix);
+  
   chord.matrix(matrix);
 
   var g = svg.selectAll("g.group")

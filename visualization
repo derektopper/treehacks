@@ -16,7 +16,7 @@ path.chord {
   fill-opacity: .80;
 }
 
-    </style>
+  </style>
   </head>
   <body>
     <div id="body">
@@ -24,13 +24,18 @@ path.chord {
         d3.layout.chord
         <div class="hint">mouseover groups to highlight</div>
       </div>
-    </div>
-    <script type="text/javascript">
+  </div>
+  <script type="text/javascript">
+
+
+
 
 var w = 1280,
     h = 800,
     r1 = h / 2,
     r0 = r1 - 80;
+
+var all_teams = [];
 
 var fill = d3.scale.category20c();
 
@@ -54,6 +59,53 @@ d3.json("https://raw.githubusercontent.com/derektopper/treehacks/master/test.jso
       nameByIndex = {},
       matrix = [],
       n = 0;
+
+
+
+
+
+  usedColumns = ["Los_Angeles_Angels_MLB", "Houston_Astros_MLB", "Toronto_Blue_Jays_MLB", "Toronto_Raptors_NBA", "Toronto_Maple_Leafs_NHL"]
+  import2 = []
+
+
+
+  function array_generator()
+  {
+    var ben = [];
+    var columnsLength = usedColumns.length;
+    var newArray = usedColumns.map(function() {
+      var r = [];
+      for(var i = 0; i < columnsLength; i++) {
+        r.push(0);
+      }
+      return r;
+    });
+
+    for (var j = 0; j < usedColumns.length; j++) {
+      for (var k = 0; k < usedColumns.length; k++) {
+        for(var i = 0; i < imports.length; i++) {
+          if (imports[i].name == usedColumns[j] && imports[i].imports[0] == usedColumns[k]) {
+            newArray[j][k] = imports[i].size;
+            console.log("adding at" + " i " + i + " j " + j + " k " + k );
+            ben.push(imports[i]);
+            break;
+          }
+        }
+      }
+    }
+
+    return ben;
+  }
+
+  output = array_generator();
+
+  window.imports_orig = imports;
+  imports = output;
+
+  window.imports = imports;
+
+
+
 
   self.names = [];
 
@@ -83,6 +135,20 @@ d3.json("https://raw.githubusercontent.com/derektopper/treehacks/master/test.jso
     }
     d.imports.forEach(function(d) { row[indexByName[name(d)]]++; });
   });
+
+
+
+
+  // the D
+  // imports.forEach(function(d){
+  //   if(d.name == teams[0] || d.name == teams[1])
+  //   {
+  //     if(d.imports[0] == teams[1] || d.name == teams[0])
+  //     {
+  //       console.log(d);
+  //     }
+  //   }
+  // });
 
   chord.matrix(matrix);
 
